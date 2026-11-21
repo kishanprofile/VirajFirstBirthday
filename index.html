@@ -39,6 +39,10 @@ h1{font-size:clamp(64px,16vw,138px);font-style:italic}
 @keyframes rise{0%{transform:translate3d(0,0,0) rotate(-4deg)}50%{transform:translate3d(var(--sw),-80vh,0) rotate(4deg)}100%{transform:translate3d(0,-190vh,0) rotate(-4deg)}}
 .sp{position:absolute;z-index:1;width:var(--s);height:var(--s);background:var(--gold1);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:tw var(--d) ease-in-out infinite;opacity:.0}
 @keyframes tw{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:.95;transform:scale(1)}}
+.pop{position:absolute;bottom:-90px;z-index:0;pointer-events:none;font-size:var(--sz,26px);line-height:1;opacity:.88;animation:poprise var(--pt,15s) linear infinite;animation-delay:var(--pdl,0s);will-change:transform}
+@keyframes poprise{0%{transform:translate3d(0,0,0) rotate(-18deg) scale(.92)}50%{transform:translate3d(var(--psw,40px),-90vh,0) rotate(18deg) scale(1.05)}100%{transform:translate3d(0,-190vh,0) rotate(-14deg) scale(.95)}}
+.conf{position:absolute;bottom:-40px;z-index:0;pointer-events:none;width:var(--cw,10px);height:var(--ch,6px);background:var(--cc,#E0B040);border-radius:2px;opacity:.82;animation:confrise var(--ct,12s) linear infinite;animation-delay:var(--cdl,0s);will-change:transform}
+@keyframes confrise{0%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(var(--csw,-35px),-90vh,0) rotate(210deg)}100%{transform:translate3d(var(--csw2,25px),-190vh,0) rotate(420deg)}}
 .wrap{max-width:760px;margin:0 auto;padding:0 20px}
 section{padding:64px 0 8px}
 h2{font-size:clamp(36px,7vw,52px);text-align:center;margin-bottom:10px}
@@ -92,7 +96,7 @@ footer{text-align:center;padding:56px 20px 44px;color:var(--muted)}
 footer b{font:italic 700 28px "Cormorant Garamond",serif}
 [hidden]{display:none!important}
 @media (max-width:560px){.row{grid-template-columns:1fr}dl div{grid-template-columns:1fr}.count div{min-width:64px}}
-@media (prefers-reduced-motion:reduce){.bal{display:none}.gal img{animation:none}.sp{animation:none;opacity:.6}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){.bal,.pop,.conf{display:none}.gal img{animation:none}.sp{animation:none;opacity:.6}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -200,7 +204,7 @@ const CFG={
   venue:"Tulsi Indian Cuisine and Events",address:"601 S Randall Rd, Elgin, IL 60123",
  
   hostEmail:"kishansharma.sharma60@gmail.com",phones:["+1 224 258 8971","+1 470 908 6464"],
-  rsvpBy:"2026-12-20",
+  rsvpBy:"2026-11-30",
   formKey:"0adea78e-8aea-4d5a-8ce6-490aa24fa1f2",              // paste your Web3Forms access key here to get an email for every RSVP
   photos:[],               // your photos, e.g. ["photos/1.jpg","photos/2.jpg"], uploaded next to this file
   cloud:{name:"",preset:""}, // Cloudinary cloud name + unsigned upload preset, so guests can upload photos here
@@ -289,6 +293,21 @@ for(let i=0;i<nb;i++){
   const b=document.createElement("i");b.className="bal";const t=16+Math.random()*14;
   b.style.cssText="left:"+(3+Math.random()*92)+"%;--w:"+(44+Math.random()*34)+"px;--c:"+cols[i%cols.length]+";--t:"+t+"s;--dl:-"+(Math.random()*t)+"s;--sw:"+((Math.random()-.5)*90)+"px";
   $("fx").append(b);
+}
+const popEmojis=["🎉","🎊"];
+const npop=innerWidth<600?4:7;
+for(let i=0;i<npop;i++){
+  const p=document.createElement("span");p.className="pop";p.textContent=popEmojis[i%popEmojis.length];
+  const pt=15+Math.random()*10;
+  p.style.cssText="left:"+(5+Math.random()*88)+"%;--sz:"+(22+Math.random()*12)+"px;--pt:"+pt+"s;--pdl:-"+(Math.random()*pt)+"s;--psw:"+((Math.random()-.5)*110)+"px";
+  $("fx").append(p);
+}
+const nconf=innerWidth<600?10:18;
+for(let i=0;i<nconf;i++){
+  const cf=document.createElement("i");cf.className="conf";
+  const ct=11+Math.random()*9;
+  cf.style.cssText="left:"+(2+Math.random()*95)+"%;--cw:"+(8+Math.random()*7)+"px;--ch:"+(5+Math.random()*6)+"px;--cc:"+cols[i%cols.length]+";--ct:"+ct+"s;--cdl:-"+(Math.random()*ct)+"s;--csw:"+((Math.random()-.5)*100)+"px;--csw2:"+((Math.random()-.5)*120)+"px";
+  $("fx").append(cf);
 }
 
 ["adults","k312","k3"].forEach(id=>{
