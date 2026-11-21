@@ -186,7 +186,6 @@ footer b{font:italic 700 28px "Cormorant Garamond",serif}
 <h2 id="dt"></h2>
 <ul class="sum" id="sum"></ul>
 <p id="dn"></p>
-<a class="btn" id="gcal" href="#" target="_blank" rel="noopener" hidden>Add to Google Calendar</a>
 <a class="btn" id="mail" href="#" hidden>Email the hosts</a>
 </div>
 </section>
@@ -299,24 +298,6 @@ document.querySelectorAll("input[name=att]").forEach(r=>r.addEventListener("chan
   $("guests").hidden=document.querySelector("input[name=att]:checked").value==="no";
 }));
 
-function toGCalStamp(d){
-  return d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-}
-function buildGoogleCalendarUrl(){
-  const evStart=start;
-  const evEnd=end||new Date(start.getTime()+3*3600*1000);
-  const loc=[CFG.venue,CFG.address].filter(Boolean).join(", ");
-  const details="Celebrating Viraj’s first birthday with the Sharma family at "+loc+".";
-  const params=new URLSearchParams({
-    action:"TEMPLATE",
-    text:"Viraj’s First Birthday Celebration",
-    dates:toGCalStamp(evStart)+"/"+toGCalStamp(evEnd),
-    details,
-    location:loc
-  });
-  return "https://calendar.google.com/calendar/render?"+params.toString();
-}
-
 $("form").addEventListener("submit",async e=>{
   e.preventDefault();
   ["e-name","e-email","e-form"].forEach(i=>$(i).textContent="");
@@ -351,19 +332,12 @@ function showDone(r,sent){
   const ul=$("sum");ul.innerHTML="";
   (yes?[r.adults+" adult"+(r.adults===1?"":"s"),r.kids_3_to_12+" kid"+(r.kids_3_to_12===1?"":"s")+" aged 3 to 12",r.babies_under_3+" "+(r.babies_under_3===1?"baby":"babies")+" under 3"]:["We will miss you at the celebration."])
     .forEach(x=>{const li=document.createElement("li");li.textContent=x;ul.append(li)});
-  if(yes){
-    $("gcal").href=buildGoogleCalendarUrl();
-    $("gcal").hidden=false;
-  }else{
-    $("gcal").hidden=true;
-  }
   if(sent){$("dn").textContent="Your reply has been delivered to the family.";$("mail").hidden=true}
   else{
     $("dn").textContent="Tap the button to email your reply to the hosts. It is pre-filled, so you only need to press send.";
     const body=["Hi,","","RSVP for Viraj’s first birthday on "+dateStr+".","","Name: "+r.name,"Email: "+r.email,"Attending: "+r.attending,
       ...(yes?["Adults: "+r.adults,"Kids aged 3 to 12: "+r.kids_3_to_12,"Babies under 3: "+r.babies_under_3]:[]),
-      "Allergies or dietary needs: "+r.allergies,"Message: "+r.message].join("
-");
+      "Allergies or dietary needs: "+r.allergies,"Message: "+r.message].join("\n");
     $("mail").href="mailto:"+CFG.hostEmail+"?subject="+encodeURIComponent("RSVP: "+r.name+" ("+(yes?"attending":"not attending")+")")+"&body="+encodeURIComponent(body);
     $("mail").hidden=false;
   }
